@@ -1,0 +1,117 @@
+resource "azurerm_resource_group" "example" {
+  name     = "database-rg"
+  location = "East Us"
+}
+
+resource "azurerm_mssql_server" "example" {
+  name                         = "mssqlserver0504"
+  resource_group_name          = azurerm_resource_group.example.name
+  location                     = azurerm_resource_group.example.location
+  version                      = "12.0"
+  administrator_login          = "missadministrator"
+  administrator_login_password = "thisIsKat11"
+  minimum_tls_version          = "1.2"
+
+  azuread_administrator {
+    login_username = "AzureAD Admin"
+    object_id      = "3a61664d-4253-4cff-8559-acba5d8b931f"
+  }
+
+  tags = {
+    environment = "production"
+  }
+}
+
+
+------------------------------------------------------------
+
+
+# Variables
+variable "resource_group_name" {
+  description = "The name of the resource group in which the resources will be created"
+  default     = "terraform-Test1"
+}
+
+variable "resource_group_location" {
+  type        = string
+  default     = "Central US"
+  description = "Location for all resources."
+}
+
+variable "vnet_name" {
+  description = "The name of the virtual network"
+  default     = "testvnet01"
+}
+
+variable "vnet_address_space" {
+  description = "The address space for the virtual network"
+  type        = list(string)
+  default     = ["10.0.0.0/16"]
+}
+
+variable "subnet_name" {
+  description = "The name of the subnet"
+  default     = "TestSubNet01"
+}
+
+variable "subnet_address_prefixes" {
+  description = "The address prefixes for the subnet"
+  type        = list(string)
+  default     = ["10.0.2.0/24"]
+}
+
+variable "nic_name" {
+  description = "The name of the network interface"
+  type        = list(string)
+  default     = ["TestNic01", "TestNic02"]
+}
+
+variable "vm_names" {
+  description = "The names of the virtual machines"
+  type        = list(string)
+  default     = ["TestVm01", "TestVm02"]
+}
+
+variable "vm_size" {
+  description = "The size of the virtual machine"
+  default     = "Standard_F2"
+}
+
+variable "admin_username" {
+  description = "The admin username for the virtual machine"
+  default     = "adminuser"
+}
+
+variable "admin_password" {
+  description = "The admin password for the virtual machine"
+  default     = "P@$$w0rd1234!"
+}
+
+variable "os_publisher" {
+  description = "The publisher for the OS image"
+  default     = "MicrosoftWindowsServer"
+}
+
+variable "os_offer" {
+  description = "The offer for the OS image"
+  default     = "WindowsServer"
+}
+
+variable "os_sku" {
+  description = "The SKU for the OS image"
+  default     = "2016-Datacenter"
+}
+
+variable "os_version" {
+  description = "The version of the OS image"
+  default     = "latest"
+}
+
+variable "tags" {
+  description = "A map of the tags to use on the resources."
+  type        = map(string)
+  default     = {
+    Environment = "Developer"
+    Department  = "Terraform"
+  }
+}
